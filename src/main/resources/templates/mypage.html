@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>MyPage</title>
+</head>
+<body>
+<h1> MyPage </h1>
+<p th:text="${nickname}">유저이름</p>
+<p th:text="${role}">유저 권한</p>
+<form action="/logout">
+<button type="submit">logout</button>
+</form>
+<a href="memberUpdate.html" th:href = "@{/mypage/update}">정보 수정</a>
+</body>
+</html>

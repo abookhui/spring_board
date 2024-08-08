@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <h2>홈 화면</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a class="w-100 btn btn-secondary btn-lg" sec:authorize="isAnonymous()" th:href="@{/signup}">회원가입</a>
+            <a class="w-100 btn btn-secondary btn-lg" sec:authorize="isAuthenticated()" th:href="@{/post}">게시판</a>
+
+        </div>
+        <div class="col">
+            <a class="w-100 btn btn-dark btn-lg" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+            <a class="w-100 btn btn-dark btn-lg" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+        </div>
+    </div>
+    <div>
+        <a th:href="@{/mypage}">마이페이지</a>
+    </div>
+    <hr class="my-4">
+</div> <!-- /container -->
+</body>
+</html>
