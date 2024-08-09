@@ -13,10 +13,26 @@
         .post-content {
             margin-bottom: 20px;
         }
+        .my-btn{
+            display:flex;
+            justify-content: space-between;
+        }
+        .my-btn-margin{
+            margin-left:6px;
+        }
+        .comments {
+            border-left: 2px solid #eee;
+            padding-left: 15px;
+        }
+
+        .comments {
+        border-left: 2px solid #eee;
+        padding-left: 15px;
+}
+
     </style>
 </head>
 <body>
-
 
 <div class="container post-container">
     <div class="row">
@@ -25,7 +41,14 @@
                 <h1 th:text="*{title}">게시글 제목</h1>
                 <div class="d-flex w-100 justify-content-between">
                     <p class="text-muted">작성자: <span th:text="*{username}">홍길동</span> | 날짜: <span th:text="*{createTime}">2024년 8월 7일</span></p>
-                    <a href="pageEdit.html" th:href="@{/post/edit/{postId}(postId=*{postId})}">수정</a>
+
+                    <div th:if="${currentUsername} == ${post.username}" class="my-btn">
+                        <a class="btn btn-light" href="#" th:href="@{/post/edit/{postId}(postId=*{postId})}">수정</a>
+                        <form th:action="@{/post/delete/{postId}(postId=*{postId})}" method="post">
+                            <button type="submit" class="btn btn-secondary my-btn-margin">삭제</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 
@@ -37,29 +60,52 @@
             </div>
             <hr class="my-4">
 
-            <a href="postList.html" th:href="@{/post}" class="btn btn-secondary back-to-list-btn">목록으로 돌아가기</a>
+            <a href="postList.html" th:href="@{/post}" class="btn btn-primary back-to-list-btn">목록으로 돌아가기</a>
+
+            <hr class="my-4">
+
+
+            <div class="mt-4" >
+                <h5>댓글</h5>
+                <br>
+
+                <div class="comments" th:each="comment: ${comments}" th:if="${not #lists.isEmpty(comments)}">
+                    <div class="comment">
+                        <strong  th:text="${comment.nickname}">홍길동</strong>
+                        <div><br></div>
+                        <p th:text="${comment.content}">댓글 내용 ㅇㅇㅇ.</p>
+
+                        <div class=" my-btn">
+                            <small  class="text-muted" th:text="${comment.createTime}">2024.08.08</small>
+                            <span th:if="${currentUsername} == ${comment.username}">
+                              <form method="post"
+                                      th:action="@{/post/{postId}/comment/{commentId}/delete(postId=*{postId},commentId=${comment.commentId})}">
+
+                                <button class="btn btn-light btn-sm">수정</button>
+                                <button type="submit" class="btn btn-secondary my-btn-margin btn-sm">삭제</button>
+                            </form>
+
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                </div>
+
+                <form class="mt-3" th:action="@{/post/{postId}/comment(postId=${post.postId})}" method="post"
+                    th:object="${postForm}"
+                >
+                    <div th:if="${#fields.hasErrors('content')}" style="color: red;">
+                        <p th:errors="${postForm.content}"></p><!-- 'content' 필드의 에러 메시지 표시 -->
+                    </div>
+                    <textarea class="form-control" rows="3" placeholder="댓글을 작성하세요" name="content" ></textarea>
+                    <button type="submit" class="btn btn-primary mt-2">등록</button>
+                </form>
+            </div>
+
         </div>
 
-<!--            <div class="post-comments">-->
-<!--                <h3>댓글</h3>-->
-<!--                <div class="form-group">-->
-<!--                    <label for="comment">댓글 작성:</label>-->
-<!--                    <textarea class="form-control" id="comment" rows="3"></textarea>-->
-<!--                </div>-->
-<!--                <br>-->
-<!--                <button type="button" class="btn btn-primary">댓글 등록</button>-->
-<!--                <hr class="my-4">-->
-<!--                <div class="mt-3">-->
-<!--                    <h4>댓글 목록</h4>-->
-<!--                    <br>-->
-<!--                    <div class="comment">-->
-<!--                        <p><strong>사용자1:</strong> 이 게시글 정말 유익하네요!</p>-->
-<!--                    </div>-->
-<!--                    <div class="comment">-->
-<!--                        <p><strong>사용자2:</strong>이 게시글 정말 유익하네요 </p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
 
     </div>
 </div>
