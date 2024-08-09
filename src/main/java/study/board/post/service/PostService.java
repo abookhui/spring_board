@@ -13,6 +13,7 @@ import study.board.post.repository.PostRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,12 +30,25 @@ public class PostService {
         return savePost.getId();
     }
 
+    public void deletePost(Long postId,String username){
+        Optional<Post> byId = postRepository.findById(postId);
+        Post post = byId.get();
+
+        if(byId.isEmpty()) throw new RuntimeException("존재하지 않는 게시글입니다.");
+        if(hasAuthDeleteComment(username, post)) throw new RuntimeException("삭제 권한이 없습니다.");
+
+        postRepository.delete(post);
+    }
+
+    private static boolean hasAuthDeleteComment(String username, Post post) {
+        return !post.getWriter().getUsername().equals(username);
+    }
+
     public void editPost(PostEditDto postEditDto){
         Optional<Post> byId = postRepository.findById(postEditDto.getPostId());
 
-        if(byId.isEmpty()){
-            throw new RuntimeException("존재하지 않은 글입니다.");
-        }
+        if(byId.isEmpty()) throw new RuntimeException("존재하지 않은 게시글입니다.");
+
         Post post = byId.get();
 
         post.editPost(postEditDto.getTitle(),postEditDto.getContent(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
@@ -42,4 +56,5 @@ public class PostService {
         postRepository.save(post);
 
     }
+
 }
