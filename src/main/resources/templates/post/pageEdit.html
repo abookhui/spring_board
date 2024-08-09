@@ -21,8 +21,10 @@
         </div>
 
         <hr class="my-4">
-        <button type="submit" class="btn btn-primary">수정</button>
-        <a href="page.html" th:href="@{{postId}(postId=*{postId})}" class="btn btn-secondary back-to-list-btn">취소</a>
+        <button type="submit" class="btn btn-primary" >수정</button>
+
+        <a href="/post"  th:href="@{/post/{postId}(postId=*{postId})}" class="btn btn-secondary back-to-list-btn">취소</a>
+
 
     </form>
 </div>
