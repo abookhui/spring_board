@@ -1,11 +1,11 @@
 package study.board.post.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import study.board.member.entity.Member;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,12 +25,15 @@ public class Post {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name="member_id",nullable = false)
     private Member writer;
 
     @Column(nullable = false)
     private String createTime;
+
+    @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> commentList = new ArrayList<>();
 
     public void editPost(String title,String content,String createTime){
         this.title = title;
